@@ -11,5 +11,4 @@ public class ZuulGatewayExampleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ZuulGatewayExampleApplication.class, args);
 	}
-
 }
