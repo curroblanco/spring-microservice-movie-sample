@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.movie.example.core.dto.MovieAndActorsDto;
@@ -28,6 +29,7 @@ public class MovieServiceImplTest {
 	
 	@Before
 	public void populateDB() {
+		MockitoAnnotations.initMocks(this);
 		Movie movie = new Movie(new Long(1), "Prueba", "Prueba", 2019, "Prueba");
 		movieRepository.save(movie);
 	}
@@ -46,15 +48,15 @@ public class MovieServiceImplTest {
 
 	@Test
 	public void shouldGetAMovie() {
-		MovieAndActorsDto movie = movieService.findOne(new Long(1));
-		assertEquals(new Long(1), movie.getId());
+		MovieAndActorsDto movieDto = movieService.findOne(new Long(1));
+		assertEquals(new Long(1), movieDto.getId());
 	}
 
 	@Test
 	public void shouldReturnMovieId() {
-		MovieAndActorsDto movie = new MovieAndActorsDto(new Long(2), "Prueba", "Prueba", 2019, "Prueba");
+		MovieAndActorsDto movie = new MovieAndActorsDto(new Long(1), "Prueba", "Prueba", 2019, "Prueba");
 		
-		assertEquals(new Long(2), movieService.insertOne(movie));
+		assertEquals(new Long(1), movieService.insertOne(movie));
 	}
 
 }
