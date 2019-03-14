@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+## Only uncomment while using Eureka registry service
+# eureka:
+  # client:
+    # serviceUrl:
+      # defaultZone: http://localhost:8761/eureka/
+ribbon:
+  eureka:
+    enabled: false
+    
+zuul:
+  routes:
+    movies:
+      path: /movies/**
+      url: http://localhost:8081/movies
+  
