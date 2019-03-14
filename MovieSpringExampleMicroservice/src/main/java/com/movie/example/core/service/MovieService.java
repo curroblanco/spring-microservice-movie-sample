@@ -2,12 +2,13 @@ package com.movie.example.core.service;
 
 import java.util.Collection;
 
+import com.movie.example.core.dto.MovieAndActorsDto;
 import com.movie.example.core.dto.MovieDto;
 
 public interface MovieService {
 	
 	Collection<MovieDto> findAll();
-	MovieDto findOne(Long id);
-	Long insertOne(MovieDto movieDto);
+	MovieAndActorsDto findOne(Long id);
+	Long insertOne(MovieAndActorsDto movieDto);
 	void deleteOne(Long id);
 }
