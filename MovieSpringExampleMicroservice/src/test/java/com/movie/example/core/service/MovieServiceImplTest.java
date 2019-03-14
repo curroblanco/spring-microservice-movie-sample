@@ -1,7 +1,10 @@
 package com.movie.example.core.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
@@ -28,10 +31,10 @@ public class MovieServiceImplTest {
 	private MovieServiceImpl movieService;
 	
 	@Before
-	public void populateDB() {
+	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		Movie movie = new Movie(new Long(1), "Prueba", "Prueba", 2019, "Prueba");
-		movieRepository.save(movie);
+        when(movieRepository.getOne(new Long(1))).thenReturn(movie);
 	}
 	
 	@After
