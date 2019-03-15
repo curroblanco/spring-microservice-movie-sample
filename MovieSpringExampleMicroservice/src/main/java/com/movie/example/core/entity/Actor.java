@@ -8,10 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import javax.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,22 +19,20 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Movie {
+public class Actor {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String title;
-	private String genre;
-	private int year;
+	private String name;
+	private String surname;
 	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                 CascadeType.PERSIST,
                 CascadeType.MERGE
-            })
-    @JoinTable(name = "movie_actors",
-            joinColumns = { @JoinColumn(name = "movie_id") },
-            inverseJoinColumns = { @JoinColumn(name = "actor_id") })
-	Set<Actor> movieActors;
+            },
+            mappedBy = "movieActors")
+	Set<Movie> movies;
 }

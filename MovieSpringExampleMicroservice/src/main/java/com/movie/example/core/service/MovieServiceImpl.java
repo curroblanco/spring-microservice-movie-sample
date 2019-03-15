@@ -32,8 +32,9 @@ public class MovieServiceImpl implements MovieService {
 
 	@Override
 	public MovieAndActorsDto findOne(Long id) {
-		
-		return transformer.toMovieAndActorsDtoFromEntity(movieRepository.getOne(id));
+		Movie movie = movieRepository.getOne(id);
+
+		return transformer.toMovieAndActorsDtoFromEntity(movie);
 	}
 
 	@Override

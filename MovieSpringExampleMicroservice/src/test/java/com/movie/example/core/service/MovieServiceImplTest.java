@@ -1,45 +1,41 @@
 package com.movie.example.core.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.movie.example.core.dto.MovieAndActorsDto;
 import com.movie.example.core.dto.MovieDto;
 import com.movie.example.core.entity.Movie;
 import com.movie.example.core.repository.MovieJpaRepository;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class MovieServiceImplTest {
 	
 	@Mock
-	private MovieJpaRepository movieRepository;
+	MovieJpaRepository movieRepository;
 	
 	@InjectMocks
-	private MovieServiceImpl movieService;
+	MovieServiceImpl movieService = new MovieServiceImpl();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		Movie movie = new Movie(new Long(1), "Prueba", "Prueba", 2019, "Prueba");
-        when(movieRepository.getOne(new Long(1))).thenReturn(movie);
-	}
-	
-	@After
-	public void deleteDB() {
-		movieRepository.deleteAll();
+		
+		MovieJpaRepository movieRepository = mock(MovieJpaRepository.class);
+		Movie movie = new Movie(new Long(1), "Prueba", "Prueba", 2019, null);
+        when(movieRepository.getOne(Mockito.anyLong())).thenReturn(movie);
 	}
 	
 	@Test
@@ -57,9 +53,9 @@ public class MovieServiceImplTest {
 
 	@Test
 	public void shouldReturnMovieId() {
-		MovieAndActorsDto movie = new MovieAndActorsDto(new Long(1), "Prueba", "Prueba", 2019, "Prueba");
+		MovieAndActorsDto movie = new MovieAndActorsDto(new Long(1), "Prueba", "Prueba", 2019, null);
 		
 		assertEquals(new Long(1), movieService.insertOne(movie));
-	}
+	} 
 
 }

@@ -27,7 +27,7 @@ public class MovieTransformer implements Transformer<Movie, MovieDto> {
 		movieDto.setTitle(movie.getTitle());
 		movieDto.setYear(movie.getYear());
 		movieDto.setId(movie.getId());
-		movieDto.setActors(movie.getActors());
+		movieDto.setActors(movie.getMovieActors());
 		
 		return movieDto;
 	}
@@ -50,7 +50,7 @@ public class MovieTransformer implements Transformer<Movie, MovieDto> {
 		movie.setId(movieDto.getId());
 		movie.setTitle(movieDto.getTitle());
 		movie.setYear(movieDto.getYear());
-		movie.setActors(movieDto.getActors());
+		movie.setMovieActors(movieDto.getActors());
 		
 		return movie;
 	}
