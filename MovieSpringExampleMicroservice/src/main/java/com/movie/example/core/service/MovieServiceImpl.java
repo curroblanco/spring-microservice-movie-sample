@@ -24,7 +24,7 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	public Collection<MovieDto> findAll() {
 		Collection<Movie> moviesFromDB = movieRepository.findAll();
-		
+
 		return moviesFromDB.stream()
 				.map(movie -> transformer.toDtoFromEntity(movie))
 					.collect(Collectors.toList());
@@ -33,7 +33,7 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	public MovieAndActorsDto findOne(Long id) {
 		Movie movie = movieRepository.getOne(id);
-
+		
 		return transformer.toMovieAndActorsDtoFromEntity(movie);
 	}
 
