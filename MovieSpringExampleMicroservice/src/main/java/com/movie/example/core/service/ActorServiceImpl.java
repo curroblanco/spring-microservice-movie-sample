@@ -17,8 +17,7 @@ public class ActorServiceImpl implements ActorService {
 	@Autowired
 	private ActorJpaRepository actorRepository;
 	
-	@Autowired
-	private ActorTransformer transformer;
+	private ActorTransformer transformer = new ActorTransformer();
 	
 	@Override
 	public Collection<ActorDto> findAll() {
@@ -45,9 +44,10 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public void deleteOne(Long id) {
+	public Boolean deleteOne(Long id) {
 		
 		actorRepository.deleteById(id);
+		return true;
 	}
 
 }

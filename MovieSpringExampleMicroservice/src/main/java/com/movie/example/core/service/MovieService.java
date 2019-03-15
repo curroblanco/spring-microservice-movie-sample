@@ -10,5 +10,5 @@ public interface MovieService {
 	Collection<MovieDto> findAll();
 	MovieAndActorsDto findOne(Long id);
 	Long insertOne(MovieAndActorsDto movieDto);
-	void deleteOne(Long id);
+	Boolean deleteOne(Long id);
 }

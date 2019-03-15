@@ -9,5 +9,5 @@ public interface ActorService {
 	Collection<ActorDto> findAll();
 	ActorDto findOne(Long id);
 	Long insertOne(ActorDto actor);
-	void deleteOne(Long id);
+	Boolean deleteOne(Long id);
 }

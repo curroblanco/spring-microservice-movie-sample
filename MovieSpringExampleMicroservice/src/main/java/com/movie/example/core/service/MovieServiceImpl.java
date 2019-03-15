@@ -18,8 +18,7 @@ public class MovieServiceImpl implements MovieService {
 	@Autowired
 	private MovieJpaRepository movieRepository;
 	
-	@Autowired
-	private MovieTransformer transformer;
+	private MovieTransformer transformer = new MovieTransformer();
 	
 	@Override
 	public Collection<MovieDto> findAll() {
@@ -46,9 +45,10 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public void deleteOne(Long id) {
+	public Boolean deleteOne(Long id) {
 		
 		movieRepository.deleteById(id);
+		return true;
 	}
 
 }
