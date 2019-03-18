@@ -18,15 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.movie.example.MovieSpringExampleMicroserviceApplication;
-import com.movie.example.core.dto.MovieAndActorsDto;
-import com.movie.example.core.dto.MovieDto;
-import com.movie.example.core.entity.Movie;
-import com.movie.example.core.repository.MovieJpaRepository;
+import com.movie.example.core.dto.ActorDto;
+import com.movie.example.core.entity.Actor;
+import com.movie.example.core.repository.ActorJpaRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = MovieSpringExampleMicroserviceApplication.class, 
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MovieControllerTest {	
+public class ActorControllerTest {
 	
 	@LocalServerPort
 	private int port;
@@ -36,59 +35,57 @@ public class MovieControllerTest {
 	HttpHeaders headers = new HttpHeaders();
 	
 	@Autowired
-    private MovieJpaRepository movieRepository;
-    
+    private ActorJpaRepository actorRepository;
 
 	@Test
-	public void shouldGetOneMovieAndStatus200() throws Exception {
-		movieRepository.save(new Movie(Long.valueOf(1), "Test", "Test", 1987, null));
+	public void shouldGetOneActorAndStatus200() {
+		actorRepository.save(new Actor(Long.valueOf(1), "Test", "Test", null));
 	    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 	
-		ResponseEntity<MovieDto> response = restTemplate.exchange("http://localhost:" + port + "/movies/1",
-				HttpMethod.GET, entity, MovieDto.class);
-		
+		ResponseEntity<ActorDto> response = restTemplate.exchange("http://localhost:" + port + "/actors/1",
+				HttpMethod.GET, entity, ActorDto.class);
+
 	    assertEquals(Long.valueOf(1), response.getBody().getId());
 	    assertEquals(200, response.getStatusCodeValue());
 	}
 
-
 	@Test
 	public void shouldGetStatusCode204AndDelete() {
-		movieRepository.save(new Movie(Long.valueOf(1), "Test", "Test", 1987, null));
+		actorRepository.save(new Actor(Long.valueOf(1), "Test", "Test", null));
 	    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 		
-		ResponseEntity<Object> response = restTemplate.exchange("http://localhost:" + port + "/movies/1",
+		ResponseEntity<Object> response = restTemplate.exchange("http://localhost:" + port + "/actors/1",
 				HttpMethod.DELETE, entity, Object.class);
 		
 	    assertEquals(204, response.getStatusCodeValue());
 	}
-	
-	@Test
+
 	@SuppressWarnings("unchecked")
-	public void shouldGetAllMoviesAndStatus200() {
-		movieRepository.save(new Movie(Long.valueOf(2), "Test", "Test", 1987, null));
+	@Test
+	public void shouldGetAllActorsAndStatus200() {
+		actorRepository.save(new Actor(Long.valueOf(1), "Test", "Test", null));
 	    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 		
-		ResponseEntity<Object> response = restTemplate.exchange("http://localhost:" + port + "/movies/",
+		ResponseEntity<Object> response = restTemplate.exchange("http://localhost:" + port + "/actors/",
 				HttpMethod.GET, entity, Object.class);
 		
-		List<MovieDto> movieDtoList = (List<MovieDto>) response.getBody();
+		List<ActorDto> actorDtoList = (List<ActorDto>) response.getBody();
 
-		Map<String, Object> currentMovie = (Map<String, Object>) movieDtoList.get(0);
-		Integer movieId = (Integer) currentMovie.get("id");
+		Map<String, Object> currentActor = (Map<String, Object>) actorDtoList.get(0);
+		Integer actorId = (Integer) currentActor.get("id");
 
-	    assertEquals(Long.valueOf(2), Long.valueOf(movieId));
+	    assertEquals(Long.valueOf(1), Long.valueOf(actorId));
 	    assertEquals(200, response.getStatusCodeValue());
 	}
 	
 	@Test
-	public void testInsertMovie() {
-		MovieAndActorsDto movieToInsert = new MovieAndActorsDto(Long.valueOf(3), "Test", "Test", 1987, null);
+	public void testInsertActor() {
+		ActorDto actorToInsert = new ActorDto(Long.valueOf(1), "Test", "Test");
 
-		ResponseEntity<MovieAndActorsDto> response = restTemplate
-				.postForEntity("http://localhost:" + port + "/movies/", movieToInsert, MovieAndActorsDto.class);
+		ResponseEntity<ActorDto> response = restTemplate
+				.postForEntity("http://localhost:" + port + "/movies/", actorToInsert, ActorDto.class);
 
 		assertEquals(201, response.getStatusCodeValue());
 	}
-
+	
 }
