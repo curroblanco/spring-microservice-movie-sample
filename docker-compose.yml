@@ -24,3 +24,7 @@ services:
     image: movie-microservice
     ports:
       - 8081:8081
+  eureka-server:
+    image: eureka-server
+    ports:
+      - 8761:8761
