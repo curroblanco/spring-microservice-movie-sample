@@ -26,19 +26,19 @@ public class ActorController {
 	private ActorService actorService;
 	
 	@GetMapping
-	public ResponseEntity<Collection<ActorDto>> getAllMovies() {
+	public ResponseEntity<Collection<ActorDto>> getAllActors() {
 		
 		return new ResponseEntity<Collection<ActorDto>>(actorService.findAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ActorDto> getOneMovie(@PathVariable Long id) {
+	public ResponseEntity<ActorDto> getOneActor(@PathVariable Long id) {
 		
 		return new ResponseEntity<ActorDto>(actorService.findOne(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insertMovie(@RequestBody ActorDto actorDto) {
+	public ResponseEntity<Void> insertActor(@RequestBody ActorDto actorDto) {
 		Long actorId = actorService.insertOne(actorDto);
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -48,7 +48,7 @@ public class ActorController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteOneMovie(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteActor(@PathVariable Long id) {
 		actorService.deleteOne(id);
 		
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
