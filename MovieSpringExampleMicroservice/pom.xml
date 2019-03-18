@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.movie.example</groupId>
-	<artifactId>MovieSpringExampleMicroservice</artifactId>
+	<artifactId>movie-spring-microservice-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MovieSpringExampleMicroservice</name>
+	<name>movie-spring-microservice-example</name>
 	<description>Demo project for explaining basic Micoservice Integration</description>
 
 	<properties>
