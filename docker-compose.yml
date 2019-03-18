@@ -20,10 +20,13 @@ services:
       - 8080:8080
     links:
       - movie-microservice:movie-microservice
+      - eureka-server:eureka-server
   movie-microservice:
     image: movie-microservice
     ports:
       - 8081:8081
+    links:
+      - eureka-server:eureka-server
   eureka-server:
     image: eureka-server
     ports:
