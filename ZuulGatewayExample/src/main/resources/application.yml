@@ -1,11 +1,10 @@
 server:
   port: 8080
 
-## Only uncomment while using Eureka registry service
-# eureka:
-  # client:
-    # serviceUrl:
-      # defaultZone: http://localhost:8761/eureka/
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
       
 ribbon:
   eureka:
@@ -20,3 +19,4 @@ zuul:
       path: /actors/**
       url: http://192.168.99.100:8081/actors
   
+spring:  application:    name: zuul-gateway
