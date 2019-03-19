@@ -10,24 +10,28 @@ services:
     ports: 
       - 5432:5432
   adminer:
+    container_name: adminer
     image: adminer
     restart: always
     ports:
       - 10000:8080
   zuul-gateway:
+    container_name: zuul-gateway
     image: zuul-gateway
     ports:
       - 8080:8080
     links:
-      - movie-microservice:movie-microservice
+      - movies-microservice:movies-microservice
       - eureka-server:eureka-server
-  movie-microservice:
-    image: movie-microservice
+  movies-microservice:
+    container_name: movies-microservice
+    image: movies-microservice
     ports:
       - 8081:8081
     links:
       - eureka-server:eureka-server
   eureka-server:
+    container_name: eureka-server
     image: eureka-server
     ports:
       - 8761:8761

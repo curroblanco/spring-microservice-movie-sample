@@ -2,21 +2,23 @@ server:
   port: 8080
 
 eureka:
+  instance:    preferIpAddress: true
   client:
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
       defaultZone: http://eureka-server:8761/eureka/
       
 ribbon:
   eureka:
-    enabled: false
+    enabled: true
     
 zuul:
   routes:
     movies:
       path: /movies/**
-      url: http://192.168.99.100:8081/movies
+      serviceId: movies-microservice
     actors:
       path: /actors/**
-      url: http://192.168.99.100:8081/actors
-  
+      serviceId: movies-microservice
 spring:  application:    name: zuul-gateway
