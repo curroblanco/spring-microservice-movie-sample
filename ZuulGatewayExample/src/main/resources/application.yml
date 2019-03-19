@@ -21,4 +21,5 @@ zuul:
     actors:
       path: /actors/**
       serviceId: movies-microservice
+      
 spring:  application:    name: zuul-gateway

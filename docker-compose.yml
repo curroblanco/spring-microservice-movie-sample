@@ -23,6 +23,9 @@ services:
     links:
       - movies-microservice:movies-microservice
       - eureka-server:eureka-server
+    depends_on:
+      - movies-microservice
+      - eureka-server
   movies-microservice:
     container_name: movies-microservice
     image: movies-microservice
@@ -30,6 +33,8 @@ services:
       - 8081:8081
     links:
       - eureka-server:eureka-server
+    depends_on:
+      - eureka-server
   eureka-server:
     container_name: eureka-server
     image: eureka-server
