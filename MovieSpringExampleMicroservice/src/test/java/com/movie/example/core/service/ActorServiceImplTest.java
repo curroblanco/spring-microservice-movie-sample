@@ -9,10 +9,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.movie.example.core.dto.ActorDto;
@@ -20,13 +21,14 @@ import com.movie.example.core.entity.Actor;
 import com.movie.example.core.repository.ActorJpaRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest
 public class ActorServiceImplTest {
 	
-	@Mock
+	@MockBean
 	ActorJpaRepository actorRepository;
 	
-	@InjectMocks
-	ActorServiceImpl actorService = new ActorServiceImpl();
+	@Autowired
+	ActorServiceImpl actorService;
 	
 	@Before
 	public void setUp() {

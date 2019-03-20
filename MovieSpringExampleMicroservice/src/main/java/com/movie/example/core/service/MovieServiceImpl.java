@@ -19,7 +19,8 @@ public class MovieServiceImpl implements MovieService {
 	@Autowired
 	private MovieJpaRepository movieRepository;
 	
-	private ModelValidator validator = new ModelValidator();
+	@Autowired
+	private ModelValidator validator;
 	
 	private MovieTransformer transformer = new MovieTransformer();
 	

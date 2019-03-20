@@ -9,5 +9,4 @@ public class MovieSpringExampleMicroserviceApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }
