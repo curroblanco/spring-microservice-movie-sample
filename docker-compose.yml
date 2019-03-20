@@ -16,6 +16,8 @@ services:
     ports:
       - 10000:8080
   zuul-gateway:
+    build:
+      context: ./ZuulGatewayExample/
     container_name: zuul-gateway
     image: zuul-gateway
     ports:
@@ -27,6 +29,8 @@ services:
       - movies-microservice
       - eureka-server
   movies-microservice:
+    build:
+      context: ./MovieSpringExampleMicroservice/
     container_name: movies-microservice
     image: movies-microservice
     ports:
@@ -36,6 +40,8 @@ services:
     depends_on:
       - eureka-server
   eureka-server:
+    build:
+      context: ./EurekaServer/
     container_name: eureka-server
     image: eureka-server
     ports:
