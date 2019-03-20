@@ -47,13 +47,13 @@ public class ActorServiceImplTest {
 	}
 
 	@Test
-	public void shouldGetAMovie() {
+	public void shouldGetAnActor() {
 		ActorDto actorDto = actorService.findOne(Long.valueOf(1));
 		assertEquals(Long.valueOf(1), actorDto.getId());
 	}
 
 	@Test
-	public void shouldReturnMovieId() {
+	public void shouldReturnActorId() {
 		ActorDto actorDto = new ActorDto(Long.valueOf(1), "Test", "Test");
 		
 		assertEquals(Long.valueOf(1), actorService.insertOne(actorDto));

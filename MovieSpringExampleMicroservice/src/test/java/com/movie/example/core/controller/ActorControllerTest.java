@@ -23,7 +23,7 @@ import com.movie.example.core.entity.Actor;
 import com.movie.example.core.repository.ActorJpaRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = MovieSpringExampleMicroserviceApplication.class, 
+@SpringBootTest(classes = {MovieSpringExampleMicroserviceApplication.class},
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ActorControllerTest {
 	
