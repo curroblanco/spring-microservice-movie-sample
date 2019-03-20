@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
+import javax.validation.constraints.NotNull;
 import javax.persistence.JoinColumn;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +25,14 @@ public class Movie {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotNull
 	private String title;
+	
+	@NotNull
 	private String genre;
+	
+	@NotNull
 	private int year;
 	
 	@ManyToMany(fetch = FetchType.LAZY,

@@ -1,5 +1,7 @@
 package com.movie.example.core.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.Setter;
 public class MovieDto {
 
 	private Long id;
-	private String title;
-	private String genre;
-	private int year;
+	@NotNull private String title;
+	@NotNull private String genre;
+	@NotNull private int year;
 }

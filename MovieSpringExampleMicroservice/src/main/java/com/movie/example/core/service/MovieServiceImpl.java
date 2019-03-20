@@ -10,6 +10,7 @@ import com.movie.example.business.transformer.MovieTransformer;
 import com.movie.example.core.dto.MovieAndActorsDto;
 import com.movie.example.core.dto.MovieDto;
 import com.movie.example.core.entity.Movie;
+import com.movie.example.core.exception.ModelValidator;
 import com.movie.example.core.repository.MovieJpaRepository;
 
 @Service
@@ -17,6 +18,9 @@ public class MovieServiceImpl implements MovieService {
 	
 	@Autowired
 	private MovieJpaRepository movieRepository;
+	
+	@Autowired
+	private ModelValidator validator;
 	
 	private MovieTransformer transformer = new MovieTransformer();
 	
@@ -38,6 +42,7 @@ public class MovieServiceImpl implements MovieService {
 
 	@Override
 	public Long insertOne(MovieAndActorsDto movieDto) {
+		validator.validate(movieDto);
 		Movie movie = transformer.toEntityFromMovieAndActorsDto(movieDto);
 		
 		movieRepository.save(movie);

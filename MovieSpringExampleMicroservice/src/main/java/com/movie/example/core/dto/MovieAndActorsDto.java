@@ -2,6 +2,8 @@ package com.movie.example.core.dto;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.movie.example.core.entity.Actor;
 
 import lombok.AllArgsConstructor;
@@ -13,8 +15,8 @@ import lombok.Setter;
 public class MovieAndActorsDto {
 	
 	private Long id;
-	private String title;
-	private String genre;
-	private int year;
+	@NotNull private String title;
+	@NotNull private String genre;
+	@NotNull private int year;
 	private Set<Actor> actors;
 }

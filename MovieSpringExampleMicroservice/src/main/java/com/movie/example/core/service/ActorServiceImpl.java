@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.movie.example.business.transformer.ActorTransformer;
 import com.movie.example.core.dto.ActorDto;
 import com.movie.example.core.entity.Actor;
+import com.movie.example.core.exception.ModelValidator;
 import com.movie.example.core.repository.ActorJpaRepository;
 
 @Service
@@ -16,6 +17,9 @@ public class ActorServiceImpl implements ActorService {
 	
 	@Autowired
 	private ActorJpaRepository actorRepository;
+	
+	@Autowired
+	private ModelValidator validator;
 	
 	private ActorTransformer transformer = new ActorTransformer();
 	
@@ -37,6 +41,7 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	public Long insertOne(ActorDto actorDto) {
+		validator.validate(actorDto);
 		Actor actor = transformer.toEntityFromDto(actorDto);
 		
 		actorRepository.save(actor);
