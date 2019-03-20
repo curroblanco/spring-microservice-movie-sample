@@ -18,8 +18,7 @@ public class ActorServiceImpl implements ActorService {
 	@Autowired
 	private ActorJpaRepository actorRepository;
 	
-	@Autowired
-	private ModelValidator validator;
+	private ModelValidator validator = new ModelValidator();
 	
 	private ActorTransformer transformer = new ActorTransformer();
 	

@@ -83,7 +83,7 @@ public class ActorControllerTest {
 		ActorDto actorToInsert = new ActorDto(Long.valueOf(1), "Test", "Test");
 
 		ResponseEntity<ActorDto> response = restTemplate
-				.postForEntity("http://localhost:" + port + "/movies/", actorToInsert, ActorDto.class);
+				.postForEntity("http://localhost:" + port + "/actors/", actorToInsert, ActorDto.class);
 
 		assertEquals(201, response.getStatusCodeValue());
 	}
