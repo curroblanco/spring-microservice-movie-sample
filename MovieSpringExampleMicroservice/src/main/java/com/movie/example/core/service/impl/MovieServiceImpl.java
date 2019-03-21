@@ -1,4 +1,4 @@
-package com.movie.example.core.service;
+package com.movie.example.core.service.impl;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -7,41 +7,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.movie.example.business.transformer.MovieTransformer;
-import com.movie.example.core.dto.MovieAndActorsDto;
+import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.dto.MovieDto;
 import com.movie.example.core.entity.Movie;
 import com.movie.example.core.exception.ModelValidator;
 import com.movie.example.core.repository.MovieJpaRepository;
+import com.movie.example.core.service.MovieService;
 
 @Service
 public class MovieServiceImpl implements MovieService {
 	
-	@Autowired
 	private MovieJpaRepository movieRepository;
-	
-	@Autowired
+	private MovieTransformer transformer;
 	private ModelValidator validator;
 	
-	private MovieTransformer transformer = new MovieTransformer();
+	@Autowired
+	public MovieServiceImpl(MovieJpaRepository movieRepository, MovieTransformer transformer, ModelValidator validator) {
+		this.movieRepository = movieRepository;
+		this.transformer = transformer;
+		this.validator = validator;
+	}
 	
 	@Override
 	public Collection<MovieDto> findAll() {
 		Collection<Movie> moviesFromDB = movieRepository.findAll();
 
 		return moviesFromDB.stream()
-				.map(movie -> transformer.toDtoFromEntity(movie))
+				.map(transformer::toDtoFromEntity)
 					.collect(Collectors.toList());
 	}
 
 	@Override
-	public MovieAndActorsDto findOne(Long id) {
-		Movie movie = movieRepository.getOne(id);
-		
-		return transformer.toMovieAndActorsDtoFromEntity(movie);
+	public MovieDetailDto findOne(Long id) {
+		return movieRepository.findById(id)
+								.map(transformer::toMovieAndActorsDtoFromEntity)
+								.orElseThrow();
 	}
 
 	@Override
-	public Long insertOne(MovieAndActorsDto movieDto) {
+	public Long insertOne(MovieDetailDto movieDto) {
 		validator.validate(movieDto);
 		Movie movie = transformer.toEntityFromMovieAndActorsDto(movieDto);
 		
@@ -50,10 +54,9 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public Boolean deleteOne(Long id) {
+	public void deleteOne(Long id) {
 		
 		movieRepository.deleteById(id);
-		return true;
 	}
 
 }

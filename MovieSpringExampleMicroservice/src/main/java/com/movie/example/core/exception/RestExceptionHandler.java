@@ -2,27 +2,26 @@ package com.movie.example.core.exception;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javassist.NotFoundException;
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler {
 	
-	@ExceptionHandler({EntityNotFoundException.class, NotFoundException.class})
-	public ResponseEntity<ApiError> handleEntityNotFound(EntityNotFoundException ex) {
+	private static final String NOT_FOUND_TEXT = "Resource not found";
+	
+	@ExceptionHandler({EntityNotFoundException.class, NotFoundException.class, NoSuchElementException.class})
+	public ResponseEntity<ApiError> handleEntityNotFound(Exception ex) {
 		ApiError apiError = new ApiError();
 		apiError.setMessage(ex.getMessage());
 		apiError.setStatus(HttpStatus.NOT_FOUND);

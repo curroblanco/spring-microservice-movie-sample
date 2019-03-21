@@ -6,13 +6,10 @@ import javax.validation.constraints.NotNull;
 
 import com.movie.example.core.entity.Actor;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class MovieAndActorsDto {
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class MovieDetailDto {
 	
 	private Long id;
 	@NotNull private String title;

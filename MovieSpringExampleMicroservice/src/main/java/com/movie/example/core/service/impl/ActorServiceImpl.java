@@ -1,4 +1,4 @@
-package com.movie.example.core.service;
+package com.movie.example.core.service.impl;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -11,32 +11,37 @@ import com.movie.example.core.dto.ActorDto;
 import com.movie.example.core.entity.Actor;
 import com.movie.example.core.exception.ModelValidator;
 import com.movie.example.core.repository.ActorJpaRepository;
+import com.movie.example.core.service.ActorService;
 
 @Service
 public class ActorServiceImpl implements ActorService {
 	
-	@Autowired
 	private ActorJpaRepository actorRepository;
-	
-	@Autowired
 	private ModelValidator validator;
-	
-	private ActorTransformer transformer = new ActorTransformer();
+	private ActorTransformer transformer;
+
+	@Autowired
+	public ActorServiceImpl(ActorJpaRepository actorRepository, ActorTransformer transformer,
+							ModelValidator validator) {
+		this.actorRepository = actorRepository;
+		this.transformer = transformer;
+		this.validator = validator;
+	}
 	
 	@Override
 	public Collection<ActorDto> findAll() {
 		Collection<Actor> actorFromDB = actorRepository.findAll();
 		
 		return actorFromDB.stream()
-				.map(actor -> transformer.toDtoFromEntity(actor))
+				.map(transformer::toDtoFromEntity)
 					.collect(Collectors.toList());
 	}
 
 	@Override
 	public ActorDto findOne(Long id) {
-		Actor actor = actorRepository.getOne(id);
-
-		return transformer.toDtoFromEntity(actor);
+		return actorRepository.findById(id)
+							.map(transformer::toDtoFromEntity)
+							.orElseThrow();
 	}
 
 	@Override
@@ -49,10 +54,9 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public Boolean deleteOne(Long id) {
+	public void deleteOne(Long id) {
 		
 		actorRepository.deleteById(id);
-		return true;
 	}
 
 }

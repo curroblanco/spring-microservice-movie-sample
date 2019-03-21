@@ -19,11 +19,15 @@ import com.movie.example.core.dto.ActorDto;
 import com.movie.example.core.service.ActorService;
 
 @RestController
-@RequestMapping("/actors")
+@RequestMapping("/actor")
 public class ActorController {
 
-	@Autowired
 	private ActorService actorService;
+	
+	@Autowired
+	public ActorController(ActorService actorService) {
+		this.actorService = actorService;
+	}
 	
 	@GetMapping
 	public ResponseEntity<Collection<ActorDto>> getAllActors() {

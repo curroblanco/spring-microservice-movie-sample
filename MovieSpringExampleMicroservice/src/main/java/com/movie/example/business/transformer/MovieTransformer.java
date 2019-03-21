@@ -2,7 +2,7 @@ package com.movie.example.business.transformer;
 
 import org.springframework.stereotype.Component;
 
-import com.movie.example.core.dto.MovieAndActorsDto;
+import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.dto.MovieDto;
 import com.movie.example.core.entity.Movie;
 
@@ -20,8 +20,8 @@ public class MovieTransformer implements Transformer<Movie, MovieDto> {
 		return movieDto;
 	}
 	
-	public MovieAndActorsDto toMovieAndActorsDtoFromEntity(Movie movie) {
-		MovieAndActorsDto movieDto = new MovieAndActorsDto();
+	public MovieDetailDto toMovieAndActorsDtoFromEntity(Movie movie) {
+		MovieDetailDto movieDto = new MovieDetailDto();
 		
 		movieDto.setGenre(movie.getGenre());
 		movieDto.setTitle(movie.getTitle());
@@ -43,7 +43,7 @@ public class MovieTransformer implements Transformer<Movie, MovieDto> {
 		return movie;
 	}
 	
-	public Movie toEntityFromMovieAndActorsDto(MovieAndActorsDto movieDto) {
+	public Movie toEntityFromMovieAndActorsDto(MovieDetailDto movieDto) {
 		Movie movie = new Movie();
 		
 		movie.setGenre(movieDto.getGenre());

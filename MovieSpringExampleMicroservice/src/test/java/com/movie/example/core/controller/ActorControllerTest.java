@@ -3,7 +3,6 @@ package com.movie.example.core.controller;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.movie.example.MovieSpringExampleMicroserviceApplication;
@@ -23,6 +23,7 @@ import com.movie.example.core.entity.Actor;
 import com.movie.example.core.repository.ActorJpaRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(classes = {MovieSpringExampleMicroserviceApplication.class},
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ActorControllerTest {
@@ -30,19 +31,18 @@ public class ActorControllerTest {
 	@LocalServerPort
 	private int port;
 
-	TestRestTemplate restTemplate = new TestRestTemplate();
-
-	HttpHeaders headers = new HttpHeaders();
+	private TestRestTemplate restTemplate = new TestRestTemplate();
+	private HttpHeaders headers = new HttpHeaders();
 	
 	@Autowired
     private ActorJpaRepository actorRepository;
 
 	@Test
 	public void shouldGetOneActorAndStatus200() {
-		actorRepository.save(new Actor(Long.valueOf(1), "Test", "Test", null));
+		actorRepository.save(Actor.builder().id(1L).name("Test").surname("Test").build());
 	    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 	
-		ResponseEntity<ActorDto> response = restTemplate.exchange("http://localhost:" + port + "/actors/1",
+		ResponseEntity<ActorDto> response = restTemplate.exchange(String.format("http://localhost:%d/actor/1", port),
 				HttpMethod.GET, entity, ActorDto.class);
 
 	    assertEquals(Long.valueOf(1), response.getBody().getId());
@@ -51,41 +51,35 @@ public class ActorControllerTest {
 
 	@Test
 	public void shouldGetStatusCode204AndDelete() {
-		actorRepository.save(new Actor(Long.valueOf(1), "Test", "Test", null));
+		actorRepository.save(Actor.builder().id(1L).name("Test").surname("Test").build());
 	    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-		
-		ResponseEntity<Object> response = restTemplate.exchange("http://localhost:" + port + "/actors/1",
-				HttpMethod.DELETE, entity, Object.class);
-		
-	    assertEquals(204, response.getStatusCodeValue());
+
+	    assertEquals(204, restTemplate.exchange(String.format("http://localhost:%d/actor/1", port),
+				HttpMethod.DELETE, entity, Object.class).getStatusCodeValue());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldGetAllActorsAndStatus200() {
-		actorRepository.save(new Actor(Long.valueOf(1), "Test", "Test", null));
+		actorRepository.save(Actor.builder().id(1L).name("Test").surname("Test").build());
 	    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 		
-		ResponseEntity<Object> response = restTemplate.exchange("http://localhost:" + port + "/actors/",
+		ResponseEntity<Object> response = restTemplate.exchange(String.format("http://localhost:%d/actor/", port),
 				HttpMethod.GET, entity, Object.class);
 		
 		List<ActorDto> actorDtoList = (List<ActorDto>) response.getBody();
 
-		Map<String, Object> currentActor = (Map<String, Object>) actorDtoList.get(0);
-		Integer actorId = (Integer) currentActor.get("id");
-
-	    assertEquals(Long.valueOf(1), Long.valueOf(actorId));
+	    assertEquals(1, actorDtoList.size());
 	    assertEquals(200, response.getStatusCodeValue());
 	}
 	
 	@Test
 	public void testInsertActor() {
-		ActorDto actorToInsert = new ActorDto(Long.valueOf(1), "Test", "Test");
+		ActorDto actorToInsert = ActorDto.builder().id(1L).name("Test").surname("Test").build();
 
-		ResponseEntity<ActorDto> response = restTemplate
-				.postForEntity("http://localhost:" + port + "/actors/", actorToInsert, ActorDto.class);
-
-		assertEquals(201, response.getStatusCodeValue());
+		assertEquals(201, restTemplate
+				.postForEntity(String.format("http://localhost:%d/actor/", port), actorToInsert, ActorDto.class)
+				.getStatusCodeValue());
 	}
 	
 }

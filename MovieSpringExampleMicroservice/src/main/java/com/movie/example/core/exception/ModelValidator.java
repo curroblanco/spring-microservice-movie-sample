@@ -10,5 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public class ModelValidator {
 	
 	public void validate(@Valid Object model) {
+		
 	}
 }

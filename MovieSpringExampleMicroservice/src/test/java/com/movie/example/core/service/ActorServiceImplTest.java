@@ -1,69 +1,71 @@
 package com.movie.example.core.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import org.junit.Before;
+import com.movie.example.business.transformer.ActorTransformer;
+import com.movie.example.core.exception.ModelValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.movie.example.core.dto.ActorDto;
 import com.movie.example.core.entity.Actor;
 import com.movie.example.core.repository.ActorJpaRepository;
+import com.movie.example.core.service.impl.ActorServiceImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
 public class ActorServiceImplTest {
 	
-	@MockBean
+	@Mock
 	ActorJpaRepository actorRepository;
-	
-	@Autowired
-	ActorServiceImpl actorService;
-	
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		List<Actor> actorList = new ArrayList<Actor>();
-		Actor actor = new Actor(Long.valueOf(1), "Test", "Test", null);
-		actorList.add(actor);
-		when(actorRepository.findAll()).thenReturn(actorList);
-        when(actorRepository.getOne(Mockito.anyLong())).thenReturn(actor);
-	}
-	
+
+	private ActorTransformer actorTransformer = new ActorTransformer();
+	private ModelValidator validator = new ModelValidator();
+
+	@InjectMocks
+	ActorServiceImpl actorService = new ActorServiceImpl(actorRepository, actorTransformer, validator);
+
 	@Test
 	public void shouldGetAnActorList() {
-		List<ActorDto> actors = (List<ActorDto>) actorService.findAll();
-		ActorDto currentActor = actors.get(0);
+		List<Actor> actorList = new ArrayList<Actor>();
+		Actor firstActor = Actor.builder().id(1L).name("Test").surname("Test").build();
+		actorList.add(firstActor);
+		Actor secondActor = Actor.builder().id(2L).name("Test").surname("Test").build();
+		actorList.add(secondActor);
+		Actor thirdActor = Actor.builder().id(3L).name("Test").surname("Test").build();
+		actorList.add(thirdActor);
 		
-		assertEquals(Long.valueOf(1), currentActor.getId());
+		when(actorRepository.findAll()).thenReturn(actorList);
+		assertEquals(3, actorService.findAll().size());
 	}
 
 	@Test
 	public void shouldGetAnActor() {
-		ActorDto actorDto = actorService.findOne(Long.valueOf(1));
+		Actor actor = Actor.builder().id(1L).name("Test").surname("Test").build();
+
+        when(actorRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(actor));
+		
+		ActorDto actorDto = actorService.findOne(1L);
 		assertEquals(Long.valueOf(1), actorDto.getId());
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void shouldGetANoSuchElementException() {
+		when(actorRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+		actorService.findOne(1L);
 	}
 
 	@Test
 	public void shouldReturnActorId() {
-		ActorDto actorDto = new ActorDto(Long.valueOf(1), "Test", "Test");
+		ActorDto actorDto = ActorDto.builder().id(1L).name("Test").surname("Test").build();
 		
 		assertEquals(Long.valueOf(1), actorService.insertOne(actorDto));
 	}
-	
-	@Test
-	public void shouldReturnTrueIfDeleted() {
-		assertEquals(true, actorService.deleteOne(Long.valueOf(1)));
-	}
-
 }

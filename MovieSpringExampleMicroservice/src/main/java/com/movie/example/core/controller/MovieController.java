@@ -15,16 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.movie.example.core.dto.MovieAndActorsDto;
+import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.dto.MovieDto;
 import com.movie.example.core.service.MovieService;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/movie")
 public class MovieController {
 
-	@Autowired
 	private MovieService movieService;
+	
+	@Autowired
+	public MovieController(MovieService movieService) {
+		this.movieService = movieService;
+	}
 	
 	@GetMapping
 	public ResponseEntity<Collection<MovieDto>> getAllMovies() {
@@ -33,13 +37,13 @@ public class MovieController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<MovieAndActorsDto> getOneMovie(@PathVariable Long id) {
+	public ResponseEntity<MovieDetailDto> getOneMovie(@PathVariable Long id) {
 		
-		return new ResponseEntity<MovieAndActorsDto>(movieService.findOne(id), HttpStatus.OK);
+		return new ResponseEntity<MovieDetailDto>(movieService.findOne(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insertMovie(@RequestBody MovieAndActorsDto movieDto) {
+	public ResponseEntity<Void> insertMovie(@RequestBody MovieDetailDto movieDto) {
 		Long movieId = movieService.insertOne(movieDto);
 		HttpHeaders headers = new HttpHeaders();
 		

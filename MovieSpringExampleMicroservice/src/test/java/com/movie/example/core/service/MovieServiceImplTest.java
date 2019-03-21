@@ -5,65 +5,78 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import org.junit.Before;
+import com.movie.example.business.transformer.MovieTransformer;
+import com.movie.example.core.exception.ModelValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.movie.example.core.dto.MovieAndActorsDto;
-import com.movie.example.core.dto.MovieDto;
+import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.entity.Movie;
 import com.movie.example.core.repository.MovieJpaRepository;
+import com.movie.example.core.service.impl.MovieServiceImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
 public class MovieServiceImplTest {
 	
-	@MockBean
+	@Mock
 	MovieJpaRepository movieRepository;
-	
-	@Autowired
-	MovieServiceImpl movieService = new MovieServiceImpl();
-	
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		List<Movie> movieList = new ArrayList<Movie>();
-		Movie movie = new Movie(Long.valueOf(1), "Test", "Test", 2019, null);
-		movieList.add(movie);
-		when(movieRepository.findAll()).thenReturn(movieList);
-        when(movieRepository.getOne(Mockito.anyLong())).thenReturn(movie);
-	}
-	
+
+	private MovieTransformer transformer = new MovieTransformer();
+	private ModelValidator validator = new ModelValidator();
+
+	@InjectMocks
+	MovieServiceImpl movieService = new MovieServiceImpl(movieRepository, transformer, validator);
+
 	@Test
 	public void shouldGetAMovieList() {
-		List<MovieDto> movies = (List<MovieDto>) movieService.findAll();
-		MovieDto currentMovie = movies.get(0);
-		
-		assertEquals(Long.valueOf(1), currentMovie.getId());
+		List<Movie> movieList = new ArrayList<>();
+		Movie firstMovie = Movie.builder().id(1L).title("Test").genre("Test")
+									.year(1987).movieActors(null).build();
+		Movie secondMovie = Movie.builder().id(2L).title("Test").genre("Test")
+									.year(1987).movieActors(null).build();
+		Movie thirdMovie = Movie.builder().id(3L).title("Test").genre("Test")
+									.year(1987).movieActors(null).build();
+
+		movieList.add(firstMovie);
+		movieList.add(secondMovie);
+		movieList.add(thirdMovie);
+
+		when(movieRepository.findAll()).thenReturn(movieList);
+
+		assertEquals(3, movieService.findAll().size());
 	}
 
 	@Test
 	public void shouldGetAMovie() {
-		MovieAndActorsDto movieDto = movieService.findOne(Long.valueOf(1));
+		Movie movie = Movie.builder().id(1L).title("Test").genre("Test")
+				.year(1987).movieActors(null).build();
+
+		when(movieRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(movie));
+
+		MovieDetailDto movieDto = movieService.findOne(1L);
 		assertEquals(Long.valueOf(1), movieDto.getId());
 	}
 
 	@Test
 	public void shouldReturnMovieId() {
-		MovieAndActorsDto movie = new MovieAndActorsDto(Long.valueOf(1), "Test", "Test", 2019, null);
+		MovieDetailDto movie = MovieDetailDto.builder().id(1L).title("Test").genre("Test")
+				.year(1987).build();
 		
 		assertEquals(Long.valueOf(1), movieService.insertOne(movie));
 	}
-	
-	@Test
-	public void shouldReturnTrueIfDeleted() {
-		assertEquals(true, movieService.deleteOne(Long.valueOf(1)));
+
+	@Test(expected = NoSuchElementException.class)
+	public void shouldGetANoSuchElementException() {
+		when(movieRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+		movieService.findOne(1L);
 	}
+
 }
