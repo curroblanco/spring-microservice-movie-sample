@@ -20,7 +20,7 @@ zuul:
       path: /movie/**
       serviceId: movies-microservice
     actors:
-      path: /actor/**
+      path: /actor/**docker
       serviceId: movies-microservice
       
 spring:

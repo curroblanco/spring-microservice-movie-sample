@@ -3,6 +3,8 @@ package com.movie.example.core.exception;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
@@ -17,9 +19,7 @@ import javassist.NotFoundException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
-	
-	private static final String NOT_FOUND_TEXT = "Resource not found";
-	
+
 	@ExceptionHandler({EntityNotFoundException.class, NotFoundException.class, NoSuchElementException.class})
 	public ResponseEntity<ApiError> handleEntityNotFound(Exception ex) {
 		ApiError apiError = new ApiError();
@@ -33,10 +33,10 @@ public class RestExceptionHandler {
 		ApiError apiError = new ApiError();
 		apiError.setMessage(ex.getLocalizedMessage());
 		apiError.setStatus(HttpStatus.BAD_REQUEST);
-		List<String> constraintList = new ArrayList<String>();
-		ex.getConstraintViolations().forEach(
-				(constraint) -> constraintList.add(String.format("%s : %s", constraint.getPropertyPath(), constraint.getMessage()))
-		);
+		List<String> constraintList = ex.getConstraintViolations().stream().map(
+				(constraint) -> String
+						.format("%s : %s", constraint.getPropertyPath(), constraint.getMessage())
+		).collect(Collectors.toList());
 		apiError.setErrors(constraintList);
 		return new ResponseEntity<ApiError>(apiError, HttpStatus.BAD_REQUEST);
 	}

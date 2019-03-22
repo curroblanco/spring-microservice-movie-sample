@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.util.*;
 
 import com.movie.example.business.transformer.ActorTransformer;
-import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.exception.ModelValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
