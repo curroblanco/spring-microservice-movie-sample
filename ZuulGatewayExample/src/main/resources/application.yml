@@ -2,7 +2,8 @@ server:
   port: 8080
 
 eureka:
-  instance:    preferIpAddress: true
+  instance:
+    preferIpAddress: true
   client:
     registerWithEureka: true
     fetchRegistry: true
@@ -16,10 +17,12 @@ ribbon:
 zuul:
   routes:
     movies:
-      path: /movies/**
+      path: /movie/**
       serviceId: movies-microservice
     actors:
-      path: /actors/**
+      path: /actor/**
       serviceId: movies-microservice
       
-spring:  application:    name: zuul-gateway
+spring:
+  application:
+    name: zuul-gateway
