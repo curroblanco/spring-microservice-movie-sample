@@ -2,16 +2,8 @@ package com.movie.example.core.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.persistence.JoinColumn;
 
 import lombok.*;
 
@@ -24,6 +16,7 @@ public class Movie {
 	private Long id;
 	
 	@NotNull
+	@Column(unique = true)
 	private String title;
 	
 	@NotNull

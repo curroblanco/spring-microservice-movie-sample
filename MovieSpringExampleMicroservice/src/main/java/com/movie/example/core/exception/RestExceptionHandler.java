@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,10 +34,18 @@ public class RestExceptionHandler {
 		apiError.setMessage(ex.getLocalizedMessage());
 		apiError.setStatus(HttpStatus.BAD_REQUEST);
 		List<String> constraintList = new ArrayList<String>();
-		for (ConstraintViolation<?> constraintMessage : ex.getConstraintViolations()) {
-			constraintList.add(constraintMessage.getPropertyPath() + " : " + constraintMessage.getMessage());
-		}
+		ex.getConstraintViolations().forEach(
+				(constraint) -> constraintList.add(String.format("%s : %s", constraint.getPropertyPath(), constraint.getMessage()))
+		);
 		apiError.setErrors(constraintList);
+		return new ResponseEntity<ApiError>(apiError, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler({DataIntegrityViolationException.class})
+	public ResponseEntity<ApiError> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setMessage(ex.getMostSpecificCause().getMessage());
+		apiError.setStatus(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<ApiError>(apiError, HttpStatus.BAD_REQUEST);
 	}
 }

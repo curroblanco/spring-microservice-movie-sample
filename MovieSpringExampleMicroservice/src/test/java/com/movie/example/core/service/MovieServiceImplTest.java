@@ -1,12 +1,10 @@
 package com.movie.example.core.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import com.movie.example.business.transformer.MovieTransformer;
 import com.movie.example.core.exception.ModelValidator;
@@ -15,12 +13,16 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.entity.Movie;
 import com.movie.example.core.repository.MovieJpaRepository;
 import com.movie.example.core.service.impl.MovieServiceImpl;
+
+import javax.validation.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MovieServiceImplTest {
@@ -77,6 +79,19 @@ public class MovieServiceImplTest {
 		when(movieRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
 		movieService.findOne(1L);
+	}
+
+	@Test
+	public void shouldEvaluateNullViolations() {
+		Validator validator;
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+
+		MovieDetailDto movie = MovieDetailDto.builder().id(1L).title(null).genre("Test")
+				.year(1987).build();
+
+		Set<ConstraintViolation<MovieDetailDto>> violations = validator.validate(movie);
+		assertTrue(!violations.isEmpty());
 	}
 
 }

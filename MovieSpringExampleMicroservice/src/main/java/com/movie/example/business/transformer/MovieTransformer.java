@@ -31,18 +31,18 @@ public class MovieTransformer implements Transformer<Movie, MovieDto> {
 		
 		return movieDto;
 	}
-	
+
 	public Movie toEntityFromDto(MovieDto movieDto) {
 		Movie movie = new Movie();
-		
+
 		movie.setGenre(movieDto.getGenre());
 		movie.setId(movieDto.getId());
 		movie.setTitle(movieDto.getTitle());
 		movie.setYear(movieDto.getYear());
-		
+
 		return movie;
 	}
-	
+
 	public Movie toEntityFromMovieAndActorsDto(MovieDetailDto movieDto) {
 		Movie movie = new Movie();
 		
