@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.movie.example.core.controller.ActorController;
 import com.movie.example.core.dto.ActorDto;
 import com.movie.example.core.service.ActorService;
 
 @RestController
 @RequestMapping("/actor")
-public class ActorControllerImpl {
+public class ActorControllerImpl implements ActorController {
 
 	private ActorService actorService;
 	
