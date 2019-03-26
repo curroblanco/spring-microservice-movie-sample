@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import com.movie.example.business.transformer.MovieTransformer;
@@ -27,9 +30,11 @@ public class MovieServiceImpl implements MovieService {
 		this.transformer = transformer;
 		this.validator = validator;
 	}
-	
+
 	@Override
+	@Cacheable(value = "movieCache")
 	public Collection<MovieDto> findAll() {
+
 		Collection<Movie> moviesFromDB = movieRepository.findAll();
 
 		return moviesFromDB.stream()
@@ -38,22 +43,29 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
+	@Cacheable(value = "singleMovieCache", key = "#id")
 	public MovieDetailDto findOne(Long id) {
+
 		return movieRepository.findById(id)
 								.map(transformer::toMovieAndActorsDtoFromEntity)
 								.orElseThrow();
 	}
 
 	@Override
+	@CacheEvict(value = "movieCache", allEntries = true)
 	public Long insertOne(MovieDetailDto movieDto) {
+		
 		validator.validate(movieDto);
 		Movie movie = transformer.toEntityFromMovieAndActorsDto(movieDto);
-		
 		movieRepository.save(movie);
 		return movie.getId();
 	}
 
 	@Override
+	@Caching(evict = {
+			@CacheEvict(value = "movieCache", allEntries = true),
+			@CacheEvict(value = "singleMovieCache", key = "#id")
+	})
 	public void deleteOne(Long id) {
 		
 		movieRepository.deleteById(id);
