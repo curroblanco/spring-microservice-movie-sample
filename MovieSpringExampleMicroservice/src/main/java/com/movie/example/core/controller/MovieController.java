@@ -2,60 +2,50 @@ package com.movie.example.core.controller;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.movie.example.core.dto.MovieDetailDto;
 import com.movie.example.core.dto.MovieDto;
-import com.movie.example.core.service.MovieService;
 
-@RestController
-@RequestMapping("/movie")
-public class MovieController {
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
 
-	private MovieService movieService;
+@Api("This com.movie.example.core.controller for accessing Movie EndPoints")
+public interface MovieController {
 	
-	@Autowired
-	public MovieController(MovieService movieService) {
-		this.movieService = movieService;
-	}
+	@ApiOperation(value = "Returns a Collection<MovieDto> for all movies", notes = "Returns a list of all movies")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returning all Movies successfully"),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+	public ResponseEntity<Collection<MovieDto>> getAllMovies();
 	
-	@GetMapping
-	public ResponseEntity<Collection<MovieDto>> getAllMovies() {
-		
-		return new ResponseEntity<Collection<MovieDto>>(movieService.findAll(), HttpStatus.OK);
-	}
+	@ApiOperation(value = "Returns a MovieDetailDto for a given ID", notes = "Returns a movie given an ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returning a Movie successfully"),
+            @ApiResponse(code = 404, message = "Movie not found"),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+	public ResponseEntity<MovieDetailDto> getOneMovie(@PathVariable Long id);
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<MovieDetailDto> getOneMovie(@PathVariable Long id) {
-		
-		return new ResponseEntity<MovieDetailDto>(movieService.findOne(id), HttpStatus.OK);
-	}
+	@ApiOperation(value = "Creates a Movie given a Movie and an ActorList", notes = "Returns new movie Resource access through"
+			+ " Location header")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Movie created successfully"),
+            @ApiResponse(code = 400, message = "Bad request while creating the movie"),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+	public ResponseEntity<Void> insertMovie(@RequestBody MovieDetailDto movieDto);
 	
-	@PostMapping
-	public ResponseEntity<Void> insertMovie(@RequestBody MovieDetailDto movieDto) {
-		Long movieId = movieService.insertOne(movieDto);
-		HttpHeaders headers = new HttpHeaders();
-		
-		headers.setLocation(ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(movieId).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteOneMovie(@PathVariable Long id) {
-		movieService.deleteOne(id);
-		
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-	}
+	@ApiOperation(value = "Deletes a movie given an ID", notes = "Returns empty body and 204 status")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Movie deleted successfully"),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+	public ResponseEntity<Void> deleteOneMovie(@PathVariable Long id);
 }
